@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--Общие элементы. Описание семантики. Описание геометрии-->
+	<xs:include schemaLocation="Commons.xsd"/>
+	<!--Земельные участки, указанные в пунктах 3,4,10 части 1 статьи 3 Закона № 119-ФЗ, которые не могут быть предоставлены в безвозмездное пользование-->
+	<xs:complexType name="ParcelWithoutBorderType">
+		<xs:annotation>
+			<xs:documentation>Земельные участки, указанные в пунктах 3,4,10 части 1 статьи 3 Закона № 119-ФЗ, которые не могут быть предоставлены в безвозмездное пользование</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ParcelEntitySpatial" type="ParcelEntitySpatialType" maxOccurs="10000">
+				<xs:annotation>
+					<xs:documentation>Пространственная сущность/Объект</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="CoordinateSystem" type="CoordinateSystemDict" use="required">
+			<xs:annotation>
+				<xs:documentation>Система координат</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ParcelEntitySpatialType">
+		<xs:sequence>
+			<xs:element name="ParcelObjectInfo" type="ParcelObjectInfoType">
+				<xs:annotation>
+					<xs:documentation>Cемантические сведения о земельном участке</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:sequence>
+				<xs:element name="SpatialElement" type="SpatialElementType" maxOccurs="100000">
+					<xs:annotation>
+						<xs:documentation>Контур Объекта/Часть многоконтурного объекта</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParcelObjectInfoType">
+		<xs:annotation>
+			<xs:documentation>Состав семантических сведений для описания Объектов типа "Земельные участки, указанные в пунктах 3,4,10 части 1 статьи 3 Закона № 119-ФЗ, которые не могут быть предоставлены в безвозмездное пользование"</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BaseObjectInfoType">
+				<xs:attribute name="CadastralNumber" type="CadastralNumberType" use="optional">
+					<xs:annotation>
+						<xs:documentation>Кадастровый номер ЗУ</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

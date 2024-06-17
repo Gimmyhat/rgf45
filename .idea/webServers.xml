@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="40a70734-ac14-49d1-8760-bec228f935bf" name="rgf_45">
+        <fileTransfer accessType="SFTP" host="192.168.3.168" port="22" sshConfigId="9d8cd3cc-dce1-47dc-bbee-9b0727c953c5" sshConfig="nas@192.168.3.168:22 agent" authAgent="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" isUseSudo="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2020 rel. 2 sp1 (x64) (http://www.altova.com) by  () -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--ПОДСХЕМЫ:-->
+	<!--Территории, земли, зоны,  в границах которых земельные участки не могут быть предоставлены в безвозмездное пользование в соответствии с частями 3, 3.3 статьи 2 и статьей 7 Закона № 119-ФЗ; ЗОУИТ; Охотничьи угодья; Территории объектов культурного наследия; Границы и территории-->
+	<xs:include schemaLocation="Special_zones.xsd"/>
+	<!--Территории, в границах которых земельные участки могут быть предоставлены в безвозмездное пользование в соответствии с частью 3.5 статьи 2 Закона № 119-ФЗ-->
+	<xs:include schemaLocation="Zony_mozno.xsd"/>
+	<!--Земельные участки, указанные в пунктах 3,4,10 части 1 статьи 3 Закона № 119-ФЗ, которые не могут быть предоставлены в безвозмездное пользование-->
+	<xs:include schemaLocation="Parcel_without_border.xsd"/>
+	<!--Земельные участки, свободные от прав третьих лиц-->
+	<xs:include schemaLocation="Parcel_free_rights.xsd"/>
+	<!--Общие элементы. Описание семантики. Описание геометрии-->
+	<xs:include schemaLocation="Commons.xsd"/>
+	<!--Справочники-->
+	<xs:include schemaLocation="Dictionaries.xsd"/>
+	<!--==================== XML-схема для предоставления федеральными органами исполнительной власти, органами государственной власти субъектов Российской Федерации, органами местного самоуправления сведений о зонах «нельзя», зонах «можно» и иных сведений, подлежащих направлению в орган регистрации прав в соответствии с Федеральным законом № 119-ФЗ в целях их внесения в федеральную информационную систему "На Дальний Восток" ==================-->
+	<xs:element name="DataMessage">
+		<xs:annotation>
+			<xs:documentation>Корневой элемент для предоставления сведений</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="eDocument">
+					<xs:annotation>
+						<xs:documentation>Электронный документ (сопроводительная записка)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="Package">
+					<xs:annotation>
+						<xs:documentation>Пакет информации</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="eDocument">
+		<xs:annotation>
+			<xs:documentation>Электронный документ (сопроводительная записка)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Sender">
+					<xs:annotation>
+						<xs:documentation>Отправитель (уполномоченный орган)</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="Region" type="RegionDict" use="required">
+							<xs:annotation>
+								<xs:documentation>Код региона отправителя </xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="Name" use="required">
+							<xs:annotation>
+								<xs:documentation>Наименование отправителя</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="1024"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="DateTime_Upload" type="xs:dateTime" use="required">
+							<xs:annotation>
+								<xs:documentation>Дата и время выгрузки</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="Count_Unload" use="optional">
+							<xs:annotation>
+								<xs:documentation>Количество объектов, включенных в выгрузку</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:totalDigits value="10"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="Version" type="xs:string" use="required" fixed="01">
+				<xs:annotation>
+					<xs:documentation>Версия схемы</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="GUID" type="GUIDType" use="required">
+				<xs:annotation>
+					<xs:documentation>Глобальный уникальный идентификатор пакета</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="ProcessingKind" type="ProcessingKindDict" use="required">
+				<xs:annotation>
+					<xs:documentation>Тип обработки заявки</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="InformationKind" type="InformationKindDict" use="required">
+				<xs:annotation>
+					<xs:documentation>Тип объектов, передаваемый в рамках XML-файла</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Package">
+		<xs:annotation>
+			<xs:documentation>Пакет информации</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="SpecialZone" type="SpecialZoneType">
+					<xs:annotation>
+						<xs:documentation>Блок для передачи следующих типов объектов:
+						1. Территории, земли, зоны,  в границах которых земельные участки не могут быть предоставлены в безвозмездное пользование в соответствии с частями 3, 3.3 статьи 2 и статьей 7 Закона № 119-ФЗ;
+						2. ЗОУИТ;
+						3. Охотничьи угодья;
+						4. Территории объектов культурного наследия;
+						5. Границы и территории</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ZonyMozno" type="ZonyMoznoType">
+					<xs:annotation>
+						<xs:documentation>Территории, в границах которых земельные участки могут быть предоставлены в безвозмездное пользование в соответствии с частью 3.5 статьи 2 Закона № 119-ФЗ</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ParcelWithoutBorder" type="ParcelWithoutBorderType">
+					<xs:annotation>
+						<xs:documentation>Земельные участки, указанные в пунктах 3,4,10 части 1 статьи 3 Закона № 119-ФЗ, которые не могут быть предоставлены в безвозмездное пользование</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="FreeRightParcels" type="FreeRightParcelsType">
+					<xs:annotation>
+						<xs:documentation>Земельные участки, свободные от прав третьих лиц</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

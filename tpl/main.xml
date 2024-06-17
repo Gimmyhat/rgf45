@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataMessage xsi:noNamespaceSchemaLocation="../../xsd/Main_schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<eDocument InformationKind="SpecialZones" GUID="{{guid}}" ProcessingKind="{{mode}}" Version="01">
+		<Sender Count_Unload="{{n_objs}}" DateTime_Upload="{{ctime}}" Name="ФГБУ «Росгеолфонд»" Region="50"/>
+	</eDocument>
+		<Package>
+			<SpecialZone CoordinateSystem="EPSG:3857" ObjectKind="ZonyNelzya">
+				{% for obj in objs -%}
+				<SpecialZoneEntitySpatial>
+					<SpecialZoneObjectInfo Area="{{obj.area}}" Name="{{obj.name}}" Region="{{region}}" Authority="Роснедра" Index="{{obj.guid}}"/>
+					{%- if mode != 'Deletion' %}
+					{% for poly in obj.polygons -%}
+					<SpatialElement>
+						{% for ipoint, point in enumerate(poly[0]) -%}
+						<SpelementUnit TypeUnit="Точка">
+							<NewOrdinate X="{{point[0]}}" Y="{{point[1]}}" Num_Geopoint="{{ipoint+1}}"/>
+						</SpelementUnit>
+						{%- endfor -%}
+						{%- for hole in poly[1:] -%}
+						<SpatialRingElement>
+							{% for ipoint, point in enumerate(hole) %}
+							<SpelementUnit TypeUnit="Точка">
+								<NewOrdinate X="{{point[0]}}" Y="{{point[1]}}" Num_Geopoint="{{ipoint+1}}"/>
+							</SpelementUnit>
+							{% endfor %}
+						</SpatialRingElement>
+						{% endfor %}
+					</SpatialElement>
+					{% endfor -%}
+					{%- endif -%}
+				</SpecialZoneEntitySpatial>
+				{% endfor -%}
+			</SpecialZone>
+		</Package>
+</DataMessage>

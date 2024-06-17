@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataMessage xsi:noNamespaceSchemaLocation="Main_schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<eDocument InformationKind="SpecialZones" GUID="00000000-0000-0000-0000-000000000001" ProcessingKind="Addition" Version="01">
+		<Sender Count_Unload="12345" DateTime_Upload="2001-12-17T09:30:47Z" Name="ФГБУ «Росгеолфонд»" Region="50"/>
+	</eDocument>
+	<Package>
+		<SpecialZone CoordinateSystem="EPSG:3857" ObjectKind="ZonyNelzya">
+			<SpecialZoneEntitySpatial>
+				<SpecialZoneObjectInfo Area="12345.12" Name="Березитовое месторождение" Region="22" Authority="Роснедра" Index="00000000-0000-0000-0000-000000000002"/>
+				<SpatialElement>
+					<SpelementUnit TypeUnit="Точка">
+						<NewOrdinate X="12345.12" Y="12345.12" Num_Geopoint="1"/>
+					</SpelementUnit>
+					<SpelementUnit TypeUnit="Точка">
+						<NewOrdinate X="12345.12" Y="12345.12" Num_Geopoint="2"/>
+					</SpelementUnit>
+					<SpelementUnit TypeUnit="Точка">
+						<NewOrdinate X="12345.12" Y="12345.12" Num_Geopoint="3"/>
+					</SpelementUnit>
+					<SpelementUnit TypeUnit="Точка">
+						<NewOrdinate X="12345.12" Y="12345.12" Num_Geopoint="4"/>
+					</SpelementUnit>
+					<SpatialRingElement>
+						<SpelementUnit TypeUnit="Точка">
+							<NewOrdinate X="12345.12" Y="12345.12" Num_Geopoint="5"/>
+						</SpelementUnit>
+						<SpelementUnit TypeUnit="Точка">
+							<NewOrdinate X="12345.12" Y="12345.12" Num_Geopoint="6"/>
+						</SpelementUnit>
+						<SpelementUnit TypeUnit="Точка">
+							<NewOrdinate X="12345.12" Y="12345.12" Num_Geopoint="7"/>
+						</SpelementUnit>
+						<SpelementUnit TypeUnit="Точка">
+							<NewOrdinate X="12345.12" Y="12345.12" Num_Geopoint="8"/>
+						</SpelementUnit>
+					</SpatialRingElement>
+				</SpatialElement>
+			</SpecialZoneEntitySpatial>
+		</SpecialZone>
+	</Package>
+</DataMessage>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приказ 45</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <script src="/static/scripts.js"></script>
+</head>
+<body>
+
+<form action="/" method="post" enctype="multipart/form-data"
+      style="text-align: center; margin-bottom: 20px;">
+    <label class="custom-file-upload">
+        <input type="file" name="file"/>
+        Выберите файл
+    </label>
+</form>
+
+<div id="loadingIndicator" class="loader" style="display: none;"></div>
+
+<div class="debug-info">
+    Текущая страница: {{ page }}, Всего страниц: {{ total_pages }}
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Исходные файлы</th>
+        <th>Дата загрузки</th>
+        <th>Количество ошибок</th>
+        <th>Результат обработки</th>
+        {% if can_view_logs %}
+            <th>Логи</th>
+        {% endif %}
+        <th>Обработанные файлы</th>
+        {% if can_view_delete %}
+            <th>Действия</th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for filename, details in files_status.items() %}
+        <tr>
+            <td>{{ details.order }}</td>
+            <td>
+                <a href="{{ url_for('main.download_file', filename=filename) }}">{{ details.original_filename or filename }}</a>
+            </td>
+            <td>{{ details.timestamp }}</td>
+            <td class="{{ 'ok-cell' if details.errors == 0 else 'error-cell' }}">{{ details.errors }}</td>
+            <td>{{ details.status }}</td>
+
+            {% if can_view_logs %}
+                <td>
+                    {% if details.get('logs', None) %}
+                        <a href="{{ url_for('main.download_file',
+                        filename=filename, extra_arg='logs') }}"
+                           target="_blank">Посмотреть
+                            лог</a>
+                    {% else %}
+                        Нет лога
+                    {% endif %}
+                </td>
+            {% else %}
+                <!-- Пустой столбец, когда 'can_view_logs' false чтобы поддерживать структуру таблицы -->
+                <td style="display:none;"></td>
+            {% endif %}
+
+            <td>
+                {% if details.get('archive', None) %}
+                    <a href="{{ url_for('main.download_file',
+                    filename=filename, extra_arg='archive') }}">
+                        {{ details.archive_filename }}</a>
+                {% else %}
+                    Нет файла
+                {% endif %}
+            </td>
+            {% if can_view_delete %}
+                <td>
+                    <button class="action-button delete-button"
+                            onclick="deleteFile('{{ filename }}')">Удалить
+                    </button>
+                </td>
+            {% else %}
+                <!-- Пустой столбец, когда 'can_view_delete' false чтобы
+                поддерживать структуру таблицы -->
+                <td style="display:none;"></td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+    {% if page > 1 %}
+        <a href="{{ url_for('main.upload_file', page=page-1) }}">&laquo; Предыдущая</a>
+    {% endif %}
+
+    {% for num in range(1, total_pages + 1) %}
+        {% if num == page %}
+            <span class="current-page">{{ num }}</span>
+        {% else %}
+            <a href="{{ url_for('main.upload_file', page=num) }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page < total_pages %}
+        <a href="{{ url_for('main.upload_file', page=page+1) }}">Следующая &raquo;</a>
+    {% endif %}
+</div>
+
+</body>
+</html>

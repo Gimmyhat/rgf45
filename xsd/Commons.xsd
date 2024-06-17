@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--Справочники-->
+	<xs:include schemaLocation="Dictionaries.xsd"/>
+	<!--Общие элементы. Описание атрибутивного состава семантических сведений. Описание передачи векторных сведений-->
+	<xs:complexType name="BaseObjectInfoType">
+		<xs:annotation>
+			<xs:documentation>Базовые семантические сведения об Объекте</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Index" type="GUIDorEmptyType" use="required">
+			<xs:annotation>
+				<xs:documentation>Идентификатор Объекта. Для типа операции "Добавление" может принимать пустое значение. Для типов операций "Замена" и "Удаление" должен принимать значение глобально уникального идентификатора Объекта, ранее опубликованного в ФИС НДВ</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Region" type="RegionDict" use="required">
+			<xs:annotation>
+				<xs:documentation>Субъект Российской Федерации, на территории которого расположен Объект</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Area" use="required">
+			<xs:annotation>
+				<xs:documentation>Площадь Объекта.
+				Для типов объектов "Территории, земли, зоны,  в границах которых земельные участки не могут быть предоставлены в безвозмездное пользование в соответствии с частями 3, 3.3 статьи 2 и статьей 7 Закона № 119-ФЗ", "Территории, в границах которых земельные участки могут быть предоставлены в безвозмездное пользование в соответствии с частью 3.5 статьи 2 Закона № 119-ФЗ", "ЗОУИТ", "Охотничьи угодья", "Территории объектов культурного наследия", "Границы и территории" указывается площадь, установленная НПА или высчитанная по координатному описанию (в кв.м).
+				Для типа объектов "Земельные участки, указанные в пунктах 3,4,10 части 1 статьи 3 Закона № 119-ФЗ, которые не могут быть предоставлены в безвозмездное пользование" указывается площадь в соответствии с данными ЕГРН (в кв.м).</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Authority" use="required">
+			<xs:annotation>
+				<xs:documentation>Наименование органа исполнительной власти, направившего соответствующие данные</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ZonyObjectInfoType">
+		<xs:annotation>
+			<xs:documentation>Состав семантических сведений для описания Объектов типов "Территории, земли, зоны,  в границах которых земельные участки не могут быть предоставлены в безвозмездное пользование в соответствии с частями 3, 3.3 статьи 2 и статьей 7 Закона № 119-ФЗ" и "Территории, в границах которых земельные участки могут быть предоставлены в безвозмездное пользование в соответствии с частью 3.5 статьи 2 Закона № 119-ФЗ"</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BaseObjectInfoType">
+				<xs:attribute name="Name" use="optional">
+					<xs:annotation>
+						<xs:documentation>Наименование Объекта</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="200"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="DocumentName" use="optional">
+					<xs:annotation>
+						<xs:documentation>Документ-основание. Для типов объектов "Территории, земли, зоны,  в границах которых земельные участки не могут быть предоставлены в безвозмездное пользование в соответствии с частями 3, 3.3 статьи 2 и статьей 7 Закона № 119-ФЗ", "ЗОУИТ", "Охотничьи угодья", "Территории объектов культурного наследия", "Границы и территории" указываются название и реквизиты НПА, указанные в ч. 3, ст. 2 Федерального закона № 119-ФЗ. Для типа объектов "Территории, в границах которых земельные участки могут быть предоставлены в безвозмездное пользование в соответствии с частью 3.5 статьи 2 Закона № 119-ФЗ" указываются название и реквизиты НПА, указанные в ч. 3.5, ст. 2 Федерального закона № 119-ФЗ.</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="500"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SpatialElementType">
+		<xs:annotation>
+			<xs:documentation>Контур Объекта/Часть многоконтурного объекта</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:sequence>
+				<xs:element name="SpelementUnit" type="SpelementUnitType" minOccurs="4" maxOccurs="100000">
+					<xs:annotation>
+						<xs:documentation>Элемент внешнего контура (сведения о характерных точках границы контура). Для корректного построения замкнутого контура значение координат первой точки должны совпадать со значением координат последней точки.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="SpatialRingElement" type="SpatialRingElementType" minOccurs="0" maxOccurs="100000">
+					<xs:annotation>
+						<xs:documentation>Внутренний контур Объекта/части многоконтурного объекта</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SpatialRingElementType">
+		<xs:annotation>
+			<xs:documentation>Внутренний контур Объекта/части многоконтурного объекта</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="SpelementUnit" type="SpelementUnitType" minOccurs="4" maxOccurs="100000">
+				<xs:annotation>
+					<xs:documentation>Элемент внутреннего контура (сведения о характерных точках границы контура). Для корректного построения замкнутого контура значение координат первой точки должны совпадать со значением координат последней точки.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SpelementUnitType">
+		<xs:sequence>
+			<xs:element name="NewOrdinate" type="NewOrdinateType">
+				<xs:annotation>
+					<xs:documentation>Координаты характерной точки границы контура</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="TypeUnit" use="required">
+			<xs:annotation>
+				<xs:documentation>Тип геометрии элемента, постоянное значение "Точка"</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="Точка"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="NewOrdinateType">
+		<xs:attribute name="Y" use="required">
+			<xs:annotation>
+				<xs:documentation>Координата Y</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="X" use="required">
+			<xs:annotation>
+				<xs:documentation>Координата X</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Num_Geopoint" use="required">
+			<xs:annotation>
+				<xs:documentation>Порядковый номер точки</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:totalDigits value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:simpleType name="GUIDType">
+		<xs:annotation>
+			<xs:documentation>Маска для глобального уникального идентификатора</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="36"/>
+			<xs:pattern value="[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GUIDorEmptyType">
+		<xs:annotation>
+			<xs:documentation>Маска для идентификатора Объекта. Для типа операции "Добавление" может принимать пустое значение. Для типов операций "Замена" и "Удаление" должен принимать значение глобально уникального идентификатора Объекта, ранее опубликованного в ФИС НДВ</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="36"/>
+			<xs:pattern value="[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}|[.]{0}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CadastralNumberType">
+		<xs:annotation>
+			<xs:documentation>Маска для кадастрового номера ЗУ</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="40"/>
+			<xs:pattern value="\d{2}:\d{2}:\d{6,7}:\d{1,}"/>
+			<xs:pattern value="0:0:0:\d+"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--Общие элементы. Описание семантики. Описание геометрии-->
+	<xs:include schemaLocation="Commons.xsd"/>
+	<!--Земельные участки, свободные от прав третьих лиц, на которых отсутствуют объекты капитального строительства-->
+	<xs:complexType name="FreeRightParcelsType">
+		<xs:annotation>
+			<xs:documentation>Земельные участки, свободные от прав третьих лиц</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="CadastralNumber" type="CadastralNumberType" maxOccurs="10000">
+				<xs:annotation>
+					<xs:documentation>Кадастровый номер ЗУ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--Общие элементы. Описание семантики. Описание геометрии-->
+	<xs:include schemaLocation="Commons.xsd"/>
+	<!--Территории, в границах которых земельные участки могут быть предоставлены в безвозмездное пользование в соответствии с частью 3.5 статьи 2 Закона № 119-ФЗ-->
+	<xs:complexType name="ZonyMoznoType">
+		<xs:annotation>
+			<xs:documentation>Территории, в границах которых земельные участки могут быть предоставлены в безвозмездное пользование в соответствии с частью 3.5 статьи 2 Закона № 119-ФЗ</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ZonyMoznoEntitySpatial" type="ZonyMoznoEntitySpatialType" maxOccurs="10000">
+				<xs:annotation>
+					<xs:documentation>Пространственная сущность/Объект</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="CoordinateSystem" type="CoordinateSystemDict" use="required">
+			<xs:annotation>
+				<xs:documentation>Система координат</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ZonyMoznoEntitySpatialType">
+		<xs:sequence>
+			<xs:element name="ZonyMoznoObjectInfo" type="ZonyObjectInfoType">
+				<xs:annotation>
+					<xs:documentation>Cемантические сведения об Объекте</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:sequence>
+				<xs:element name="SpatialElement" type="SpatialElementType" maxOccurs="100000">
+					<xs:annotation>
+						<xs:documentation>Контур Объекта/Часть многоконтурного объекта</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

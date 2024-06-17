@@ -1,0 +1,41 @@
+services:
+
+  postgis:
+    image: postgis/postgis
+    environment:
+      - POSTGRES_PASSWORD=password
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+
+  your_app:
+    build:
+      context: .
+    stdin_open: true
+    tty: true
+    container_name: rgf_45_container
+    restart: always
+    volumes:
+#      - /c/_geol/wd/rgf45/data:/data
+      - /_geol/wd/rgf45/data:/data
+    ports:
+      - "8000:8000"
+    env_file:
+      - app/.env
+    environment:
+      - DOCKER=True
+    command: ["python", "run_waitress.py"]
+    depends_on:
+      - postgis
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+
+volumes:
+  postgis_data:

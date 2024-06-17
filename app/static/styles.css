@@ -1,0 +1,119 @@
+body {
+    background-color: #f4f4f4; /* Деловой серый цвет фона */
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ccc; /* Светло-серый цвет границ */
+}
+
+th, td {
+    padding: 5px; /* Уменьшение отступов до 5px */
+    text-align: left;
+}
+
+th {
+    background-color: #555; /* Темно-серый цвет для заголовков таблицы */
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Очень светлый серый цвет для четных строк */
+}
+
+.ok-cell {
+    background-color: #97f397; /* Зеленый цвет для ячеек без ошибок */
+}
+
+.error-cell {
+    background-color: #f8828b; /* Красный цвет для ячеек с ошибками */
+}
+
+.custom-file-upload, .action-button {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    background-color: #333; /* Темно-серый цвет кнопок */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    /*font-size: 15px;*/
+    display: inline-block;
+    margin-right: 10px;
+    transition: background-color 0.3s ease; /* Анимация фонового цвета */
+}
+
+.custom-file-upload:hover, .action-button:hover {
+    background-color: #555; /* Светлее серый цвет при наведении */
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.action-button.delete-button {
+    background-color: #d9534f; /* красный цвет */
+    border: 1px solid #d43f3a; /* красная граница */
+}
+
+.action-button.delete-button:hover {
+    background-color: #c9302c; /* более темный красный цвет при наведении */
+}
+
+.pagination {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 5px 15px;
+    border: 1px solid #444;
+    color: #444;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #ddd;
+}
+
+.current-page {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #ddd;
+    color: #444;
+    border: 1px solid #444;
+}
+
+.loader {
+    border: 8px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s infinite linear;
+    position: fixed; /* Использование fixed для расположения по центру */
+    top: 50%; /* Центрирование по вертикали */
+    left: 50%; /* Центрирование по горизонтали */
+    margin-top: -10px; /* Смещение для центрирования (половина высоты) */
+    margin-left: -10px; /* Смещение для центрирования (половина ширины) */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
