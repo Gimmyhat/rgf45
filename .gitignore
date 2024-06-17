@@ -1,0 +1,42 @@
+# Файлы и директории проекта PyCharm
+.idea/
+*.iml
+__pycache__/
+.pyc
+.pyo
+*.egg-info/
+venv/
+
+# Файлы, создаваемые ОС или IDE
+.DS_Store
+Thumbs.db
+
+# Логи
+*.log
+*.log.*
+npm-debug.log*
+
+# Временные файлы
+*.swp
+*~
+*.swo
+*.tmp
+
+# IDE-specific files
+.vscode/
+*.pydevproject
+*.ropeproject
+*.project
+
+# Pytest cache
+.pytest_cache/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Local configuration
+.env
+
+# Compiled bytecode
+*.py[cod]
