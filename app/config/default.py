@@ -19,5 +19,5 @@ class DefaultConfig(object):
     UPLOAD_FOLDER = os.path.join(WORK_DIR, cfg.dir.shapes)
     OUTPUT_FOLDER = os.path.join(WORK_DIR, cfg.dir.send)
     ALLOWED_EXTENSIONS = set(['7z', 'zip', 'rar'])
-    APPLICATION_ROOT = '/'
-    POSTS_PER_PAGE = 20
+    POSTS_PER_PAGE = 10
+    DEBUG = True

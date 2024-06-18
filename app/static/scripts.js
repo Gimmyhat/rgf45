@@ -1,70 +1,98 @@
 document.addEventListener('DOMContentLoaded', (event) => {
-    // Получаем элементы форму загрузки файла
+    console.log('DOMContentLoaded event fired');
     const fileInput = document.querySelector('input[type="file"]');
     const uploadForm = document.querySelector('form');
-    // Проверяем состояние процесса загрузки
-    const isUploading = localStorage.getItem('isUploading');
-    const historicalFilename = localStorage.getItem('historicalFilename');
 
-    if (isUploading === 'true' && historicalFilename) {
-        // Если процесс был активен, отображаем индикатор и продолжаем проверку статуса
-        showLoadingIndicator();
-        waitForCompletion(historicalFilename);
+    if (fileInput && uploadForm) {
+        console.log('Input and form elements found.');
+
+        fileInput.addEventListener('change', async (event) => {
+            console.log('File input change event fired.');
+
+            if (fileInput.files.length > 0) {
+                console.log('File selected:', fileInput.files[0]);
+
+                let formData = new FormData(uploadForm);
+
+                try {
+                    console.log('Submitting form data...');
+                    let response = await fetch(uploadForm.action, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    // Получаем полный текст ответа
+                    let responseText = await response.text();
+                    console.log('Response text:', responseText);
+
+                    // Проверка состояния ответа и типа содержимого
+                    if (response.ok) {
+                        console.log('Content-Type:', response.headers.get('content-type'));
+                        if (response.headers.get('content-type').includes('application/json')) {
+                            let data = JSON.parse(responseText);
+                            let historicalFilename = data.historical_filename;
+                            if (historicalFilename) {
+                                console.log('Received historical filename:', historicalFilename);
+
+                                localStorage.setItem('isUploading', 'true');
+                                localStorage.setItem('historicalFilename', historicalFilename);
+                                waitForCompletion(historicalFilename);
+                            }
+                        } else {
+                            console.error('Expected JSON response, but received:', response.headers.get('content-type'));
+                        }
+                    } else {
+                        console.error('HTTP error:', response.status);
+                    }
+                } catch (error) {
+                    console.error('Error submitting the form:', error);
+                }
+            } else {
+                console.log('No file selected.');
+            }
+        });
+
+        uploadForm.addEventListener('submit', async (event) => {
+            console.log('Form submit event fired.');
+            event.preventDefault();
+            if (fileInput.files.length > 0) {
+                let formData = new FormData(uploadForm);
+                try {
+                    console.log('Submitting form data...');
+                    let response = await fetch(uploadForm.action, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    // Получаем полный текст ответа
+                    let responseText = await response.text();
+                    console.log('Response text:', responseText);
+
+                    // Проверка состояния ответа и типа содержимого
+                    if (response.ok) {
+                        console.log('Content-Type:', response.headers.get('content-type'));
+                        if (response.headers.get('content-type').includes('application/json')) {
+                            let data = JSON.parse(responseText);
+                            let historicalFilename = data.historical_filename;
+                            if (historicalFilename) {
+                                waitForCompletion(historicalFilename);
+                            }
+                        } else {
+                            console.error('Expected JSON response, but received:', response.headers.get('content-type'));
+                        }
+                    } else {
+                        console.error('HTTP error:', response.status);
+                    }
+                } catch (error) {
+                    console.error('Error submitting the form:', error);
+                }
+            } else {
+                console.log('No file selected.');
+            }
+        });
+    } else {
+        console.error('Input or form elements not found.');
     }
-
-    fileInput.addEventListener('change', async (event) => {
-        if (fileInput.files.length > 0) {
-            // Создаем объект FormData
-            let formData = new FormData(uploadForm);
-            // Сохраняем состояние в LocalStorage
-            localStorage.setItem('isUploading', 'true');
-            try {
-                let response = await fetch(uploadForm.action, {
-                    method: 'POST',
-                    body: formData,
-                });
-                if (response.ok) {
-                    let data = await response.json();
-                    let historicalFilename = data.historical_filename;
-                    if (historicalFilename) {
-                        // Сохраняем имя файла в LocalStorage
-                        localStorage.setItem('historicalFilename', historicalFilename);
-                        waitForCompletion(historicalFilename);
-                    }
-                } else {
-                    console.error("Ошибка HTTP: " + response.status);
-                }
-            } catch(error) {
-                console.error("Ошибка при отправке файла:", error);
-            }
-        }
-    });
-
-    uploadForm.addEventListener('submit', async (event) => { // async добавлено здесь
-        event.preventDefault();
-        if (fileInput.files.length > 0) {
-            uploadButton.classList.remove('upload-animate');
-            // Создаем объект FormData
-            let formData = new FormData(uploadForm);
-            try {
-                let response = await fetch(uploadForm.action, {
-                    method: 'POST',
-                    body: formData,
-                });
-                if (response.ok) {
-                    let data = await response.json();
-                    let historicalFilename = data.historical_filename;
-                    if (historicalFilename) {
-                        waitForCompletion(historicalFilename);
-                    }
-                } else {
-                    console.error("Ошибка HTTP: " + response.status);
-                }
-            } catch(error) {
-                console.error("Ошибка при отправке файла:", error);
-            }
-        }
-    });
 });
 
 function showLoadingIndicator() {
@@ -87,7 +115,7 @@ function waitForCompletion(historicalFilename) {
     // Запрос на сервер для проверки статуса
     const checkStatusInterval = setInterval(async () => {
         try {
-            const response = await fetch(`/status/${encodeURIComponent(historicalFilename)}`);
+            const response = await fetch(`status/${encodeURIComponent(historicalFilename)}`);
             if (response.ok) {
                 const status = await response.json();
                 if (status.finished) {
@@ -110,13 +138,13 @@ function waitForCompletion(historicalFilename) {
 }
 
 function deleteFile(filename) {
-    fetch(`/delete/${filename}`, { method: 'DELETE' })
-    .then(response => {
-        if (response.ok) {
-            window.location.reload(); // Перезагрузить страницу, чтобы обновить список файлов
-        } else {
-            alert('Ошибка при удалении файла');
-        }
-    })
-    .catch(error => console.error('Ошибка удаления файла:', error));
+    fetch(`/delete/${filename}`, {method: 'DELETE'})
+        .then(response => {
+            if (response.ok) {
+                window.location.reload(); // Перезагрузить страницу, чтобы обновить список файлов
+            } else {
+                alert('Ошибка при удалении файла');
+            }
+        })
+        .catch(error => console.error('Ошибка удаления файла:', error));
 }

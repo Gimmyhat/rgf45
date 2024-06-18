@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Приказ 45</title>
-    <link rel="stylesheet" type="text/css" href="/static/styles.css">
-    <script src="/static/scripts.js"></script>
+    <link rel="stylesheet" type="text/css" href="/rgf45/static/styles.css">
+    <script src="/rgf45/static/scripts.js"></script>
 </head>
 <body>
 
-<form action="/" method="post" enctype="multipart/form-data"
+<form action="/rgf45/" method="post" enctype="multipart/form-data"
       style="text-align: center; margin-bottom: 20px;">
     <label class="custom-file-upload">
         <input type="file" name="file"/>
@@ -45,7 +45,7 @@
         <tr>
             <td>{{ details.order }}</td>
             <td>
-                <a href="{{ url_for('main.download_file', filename=filename) }}">{{ details.original_filename or filename }}</a>
+                <a href="{{ url_for('main.download_file', filename=filename) | no_leading_slash}}">{{ details.original_filename or filename }}</a>
             </td>
             <td>{{ details.timestamp }}</td>
             <td class="{{ 'ok-cell' if details.errors == 0 else 'error-cell' }}">{{ details.errors }}</td>
@@ -55,7 +55,8 @@
                 <td>
                     {% if details.get('logs', None) %}
                         <a href="{{ url_for('main.download_file',
-                        filename=filename, extra_arg='logs') }}"
+                        filename=filename, extra_arg='logs')  |
+                        no_leading_slash }}"
                            target="_blank">Посмотреть
                             лог</a>
                     {% else %}
@@ -70,7 +71,7 @@
             <td>
                 {% if details.get('archive', None) %}
                     <a href="{{ url_for('main.download_file',
-                    filename=filename, extra_arg='archive') }}">
+                    filename=filename, extra_arg='archive') | no_leading_slash}}">
                         {{ details.archive_filename }}</a>
                 {% else %}
                     Нет файла
@@ -94,19 +95,19 @@
 
 <div class="pagination">
     {% if page > 1 %}
-        <a href="{{ url_for('main.upload_file', page=page-1) }}">&laquo; Предыдущая</a>
+        <a href="{{ url_for('main.upload_file', page=page-1) | no_leading_slash}}">&laquo; Предыдущая</a>
     {% endif %}
 
     {% for num in range(1, total_pages + 1) %}
         {% if num == page %}
             <span class="current-page">{{ num }}</span>
         {% else %}
-            <a href="{{ url_for('main.upload_file', page=num) }}">{{ num }}</a>
+            <a href="{{ url_for('main.upload_file', page=num) | no_leading_slash }}">{{ num }}</a>
         {% endif %}
     {% endfor %}
 
     {% if page < total_pages %}
-        <a href="{{ url_for('main.upload_file', page=page+1) }}">Следующая &raquo;</a>
+        <a href="{{ url_for('main.upload_file', page=page+1) | no_leading_slash }}">Следующая &raquo;</a>
     {% endif %}
 </div>
 
